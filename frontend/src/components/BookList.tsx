@@ -1,16 +1,24 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { booksApi } from '../api/books';
 import type { Book } from '../types';
 import BookItem from './BookItem';
 import FilterBar, { type SortKey } from './FilterBar';
+import { useUrlState } from '../lib/useUrlState';
 
 export default function BookList() {
     const qc = useQueryClient();
 
-    const [query, setQuery] = useState('');
-    const [onlyUnread, setOnlyUnread] = useState(false);
-    const [sort, setSort] = useState<SortKey>('newest');
+    const { q, unread, sort, setQ, setUnread, setSort, clearAll } = useUrlState();
+    const [queryInput, setQueryInput] = useState(q);
+    useEffect(() => { setQueryInput(q); }, [q]);
+    useEffect(() => {
+        const t = setTimeout(() => {
+            if (queryInput.trim() !== q) setQ(queryInput);
+        }, 300);
+        return () => clearTimeout(t);
+    }, [queryInput, q, setQ]);
+
 
     const { data, isLoading, isError, error, refetch, isFetching } = useQuery({
         queryKey: ['books'],
@@ -56,14 +64,14 @@ export default function BookList() {
     const filtered = useMemo(() => {
         let rows = (data ?? []).slice();
 
-        if (query.trim()) {
-            const q = query.trim().toLowerCase();
+        if (q.trim()) {
+            const ql = q.toLowerCase();
             rows = rows.filter(
-                (b) => b.title.toLowerCase().includes(q) || b.author.toLowerCase().includes(q)
+                (b) => b.title.toLowerCase().includes(ql) || b.author.toLowerCase().includes(ql)
             );
         }
 
-        if (onlyUnread) rows = rows.filter((b) => !b.read);
+        if (unread) rows = rows.filter((b) => !b.read);
 
         rows.sort((a, b) => {
             switch (sort) {
@@ -77,13 +85,7 @@ export default function BookList() {
         });
 
         return rows;
-    }, [data, query, onlyUnread, sort]);
-
-    const clearFilters = () => {
-        setQuery('');
-        setOnlyUnread(false);
-        setSort('newest');
-    };
+    }, [data, q, unread, sort]);
 
     return (
         <>
@@ -100,13 +102,13 @@ export default function BookList() {
 
             {/* Pasek filtrów */}
             <FilterBar
-                query={query}
-                onlyUnread={onlyUnread}
+                query={queryInput}
+                onlyUnread={unread}
                 sort={sort}
-                onQueryChange={setQuery}
-                onOnlyUnreadChange={setOnlyUnread}
+                onQueryChange={setQueryInput}
+                onOnlyUnreadChange={setUnread}
                 onSortChange={setSort}
-                onClear={clearFilters}
+                onClear={clearAll}
             />
 
             {/* Loading */}
