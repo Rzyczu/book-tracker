@@ -13,7 +13,7 @@ export default function StatsPage() {
     return (
         <div className="p-4 container-app">
             <header className="mb-4 flex items-center justify-between">
-                <h1 className="text-xl font-semibold">Statystyki</h1>
+                <h1 className="text-xl font-semibold">Statistics</h1>
                 <button className="btn-outline px-3 py-1" onClick={() => refetch()} disabled={isFetching}>Odśwież</button>
             </header>
 
