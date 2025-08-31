@@ -1,6 +1,6 @@
 # Book Tracker
 
-A simple book tracker with a *Node.js* (*Express* + *TypeScript* + *SQLite*) backend and a *React* + *TypeScript* frontend.  
+A simple book tracker with a **Node.js** (**Express** + **TypeScript** + **SQLite**) backend and a **React** + **TypeScript** frontend.  
 You can browse the list, add new books, and mark/unmark them as read. The frontend includes filters, sorting, and a small statistics page.
 
 ---
