@@ -1,10 +1,16 @@
+import { useMemo, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { booksApi } from '../api/books';
 import type { Book } from '../types';
 import BookItem from './BookItem';
+import FilterBar, { type SortKey } from './FilterBar';
 
 export default function BookList() {
     const qc = useQueryClient();
+
+    const [query, setQuery] = useState('');
+    const [onlyUnread, setOnlyUnread] = useState(false);
+    const [sort, setSort] = useState<SortKey>('newest');
 
     const { data, isLoading, isError, error, refetch, isFetching } = useQuery({
         queryKey: ['books'],
@@ -47,6 +53,38 @@ export default function BookList() {
         (markRead.isPending ? markRead.variables : undefined) ??
         (unmarkRead.isPending ? unmarkRead.variables : undefined);
 
+    const filtered = useMemo(() => {
+        let rows = (data ?? []).slice();
+
+        if (query.trim()) {
+            const q = query.trim().toLowerCase();
+            rows = rows.filter(
+                (b) => b.title.toLowerCase().includes(q) || b.author.toLowerCase().includes(q)
+            );
+        }
+
+        if (onlyUnread) rows = rows.filter((b) => !b.read);
+
+        rows.sort((a, b) => {
+            switch (sort) {
+                case 'title-asc': return a.title.localeCompare(b.title, 'pl');
+                case 'title-desc': return b.title.localeCompare(a.title, 'pl');
+                case 'author-asc': return a.author.localeCompare(b.author, 'pl');
+                case 'author-desc': return b.author.localeCompare(a.author, 'pl');
+                case 'newest':
+                default: return b.id - a.id;
+            }
+        });
+
+        return rows;
+    }, [data, query, onlyUnread, sort]);
+
+    const clearFilters = () => {
+        setQuery('');
+        setOnlyUnread(false);
+        setSort('newest');
+    };
+
     return (
         <>
             <div className="mb-3 flex items-center justify-between">
@@ -59,6 +97,17 @@ export default function BookList() {
                     Odśwież
                 </button>
             </div>
+
+            {/* Pasek filtrów */}
+            <FilterBar
+                query={query}
+                onlyUnread={onlyUnread}
+                sort={sort}
+                onQueryChange={setQuery}
+                onOnlyUnreadChange={setOnlyUnread}
+                onSortChange={setSort}
+                onClear={clearFilters}
+            />
 
             {/* Loading */}
             {isLoading && (
@@ -77,16 +126,16 @@ export default function BookList() {
             )}
 
             {/* Empty */}
-            {!isLoading && !isError && data && data.length === 0 && (
+            {!isLoading && !isError && filtered && filtered.length === 0 && (
                 <div className="rounded-md border border-gray-200 bg-white p-4 text-sm text-gray-600">
-                    Brak książek. Dodaj pierwszą pozycję powyżej.
+                    Brak wyników dla zastosowanych filtrów.
                 </div>
             )}
 
             {/* List */}
-            {!isLoading && !isError && data && data.length > 0 && (
+            {!isLoading && !isError && filtered && filtered.length > 0 && (
                 <ul className="divide-y divide-gray-200 rounded-md border bg-white">
-                    {data.map((b) => (
+                    {filtered.map((b) => (
                         <BookItem
                             key={b.id}
                             book={b}
