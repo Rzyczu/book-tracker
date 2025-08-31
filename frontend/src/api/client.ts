@@ -12,7 +12,7 @@ export async function api<T>(path: string, init: RequestInit = {}): Promise<T> {
     });
 
     let payload: any = null;
-    try { payload = await res.json(); } catch { /* brak JSON w odpowiedzi */ }
+    try { payload = await res.json(); } catch { }
 
     if (!res.ok) {
         const message = payload?.error ?? `HTTP ${res.status}`;

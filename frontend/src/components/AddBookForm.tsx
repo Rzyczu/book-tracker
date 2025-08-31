@@ -11,7 +11,7 @@ const Schema = z.object({
 });
 type FormValues = z.infer<typeof Schema>;
 
-export default function AddBookForm() {
+export default function AddBookForm({ onSuccess }: { onSuccess?: (b: Book) => void }) {
     const queryClient = useQueryClient();
 
     const { register, handleSubmit, reset, formState } = useForm<FormValues>({
@@ -25,20 +25,14 @@ export default function AddBookForm() {
     const mutation = useMutation({
         mutationFn: (vals: FormValues) => booksApi.add(vals),
         onSuccess: (created: Book) => {
-            queryClient.setQueryData<Book[]>(['books'], (prev) =>
-                prev ? [created, ...prev] : [created]
-            );
+            queryClient.setQueryData<Book[]>(['books'], (prev) => (prev ? [created, ...prev] : [created]));
             reset();
+            onSuccess?.(created);
         },
     });
 
     return (
-        <form
-            onSubmit={handleSubmit((vals) => mutation.mutate(vals))}
-            className="mb-4 rounded-md border bg-white p-4"
-        >
-            <h2 className="mb-3 text-base font-semibold">Dodaj nową książkę</h2>
-
+        <form onSubmit={handleSubmit((vals) => mutation.mutate(vals))}>
             <div className="mb-3 grid gap-3 sm:grid-cols-2">
                 <div>
                     <label className="mb-1 block text-sm font-medium">Tytuł</label>
@@ -46,10 +40,9 @@ export default function AddBookForm() {
                         className="w-full rounded-md border px-3 py-2 text-sm outline-none focus:ring"
                         placeholder="np. Clean Code"
                         {...register('title')}
+                        autoFocus
                     />
-                    {errors.title && (
-                        <p className="mt-1 text-xs text-red-600">{errors.title.message}</p>
-                    )}
+                    {errors.title && <p className="mt-1 text-xs text-red-600">{errors.title.message}</p>}
                 </div>
 
                 <div>
@@ -59,9 +52,7 @@ export default function AddBookForm() {
                         placeholder="np. Robert C. Martin"
                         {...register('author')}
                     />
-                    {errors.author && (
-                        <p className="mt-1 text-xs text-red-600">{errors.author.message}</p>
-                    )}
+                    {errors.author && <p className="mt-1 text-xs text-red-600">{errors.author.message}</p>}
                 </div>
             </div>
 
@@ -73,14 +64,8 @@ export default function AddBookForm() {
                 >
                     {mutation.isPending ? 'Dodawanie…' : 'Dodaj'}
                 </button>
-
                 {mutation.isError && (
-                    <span className="text-sm text-red-700">
-                        {(mutation.error as Error).message}
-                    </span>
-                )}
-                {mutation.isSuccess && (
-                    <span className="text-sm text-green-700">Dodano</span>
+                    <span className="text-sm text-red-700">{(mutation.error as Error).message}</span>
                 )}
             </div>
         </form>
