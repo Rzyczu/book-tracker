@@ -91,16 +91,9 @@ export default function BookList() {
         <>
             <div className="mb-3 flex items-center justify-between">
                 <h2 className="text-base font-semibold">Twoje książki</h2>
-                <button
-                    className="rounded-md border px-3 py-1 text-sm hover:bg-gray-100 disabled:opacity-50"
-                    onClick={() => refetch()}
-                    disabled={isFetching}
-                >
-                    Odśwież
-                </button>
+                <button className="btn-outline px-3 py-1" onClick={() => refetch()} disabled={isFetching}>Odśwież</button>
             </div>
 
-            {/* Pasek filtrów */}
             <FilterBar
                 query={queryInput}
                 onlyUnread={unread}
@@ -111,43 +104,29 @@ export default function BookList() {
                 onClear={clearAll}
             />
 
-            {/* Loading */}
             {isLoading && (
                 <ul className="space-y-2">
-                    {[...Array(3)].map((_, i) => (
-                        <li key={i} className="h-10 animate-pulse rounded-md bg-gray-200" />
-                    ))}
+                    {[...Array(3)].map((_, i) => (<li key={i} className="h-10 skeleton" />))}
                 </ul>
             )}
 
-            {/* Error */}
             {isError && (
-                <div className="rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-700">
+                <div className="card p-3 text-sm text-red-700 border-red-200 bg-red-50">
                     Błąd pobierania listy: {(error as Error).message}
                 </div>
             )}
 
-            {/* Empty */}
             {!isLoading && !isError && filtered && filtered.length === 0 && (
-                <div className="rounded-md border border-gray-200 bg-white p-4 text-sm text-gray-600">
-                    Brak wyników dla zastosowanych filtrów.
-                </div>
+                <div className="card p-4 text-sm text-gray-600">Brak wyników dla zastosowanych filtrów.</div>
             )}
 
-            {/* List */}
             {!isLoading && !isError && filtered && filtered.length > 0 && (
-                <ul className="divide-y divide-gray-200 rounded-md border bg-white">
+                <ul className="card divide-y divide-gray-200">
                     {filtered.map((b) => (
-                        <BookItem
-                            key={b.id}
-                            book={b}
-                            onMarkRead={(id) => markRead.mutate(id)}
-                            onUnmarkRead={(id) => unmarkRead.mutate(id)}
-                            isUpdating={pendingId === b.id}
-                        />
+                        <BookItem key={b.id} book={b} onMarkRead={(id) => markRead.mutate(id)} onUnmarkRead={(id) => unmarkRead.mutate(id)} isUpdating={pendingId === b.id} />
                     ))}
                 </ul>
             )}
         </>
-    );
+    )
 }

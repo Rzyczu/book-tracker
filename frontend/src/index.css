@@ -1,3 +1,103 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+    html {
+        -webkit-text-size-adjust: 100%;
+    }
+
+    body {
+        @apply text-gray-900 antialiased bg-gray-50;
+    }
+}
+
+@layer components {
+    .container-app {
+        @apply mx-auto max-w-5xl px-4;
+    }
+
+    .card {
+        @apply rounded-xl border border-gray-200 bg-white shadow-sm;
+    }
+
+    .card-section {
+        @apply border-b px-4 py-3 last:border-b-0;
+    }
+
+    .btn {
+        @apply inline-flex items-center justify-center rounded-md text-sm font-medium transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none;
+    }
+
+    .btn-primary {
+        @apply btn bg-gray-900 text-white hover:opacity-90 focus-visible:ring-gray-400;
+    }
+
+    .btn-outline {
+        @apply btn border border-gray-300 bg-white hover:bg-gray-50 text-gray-900 focus-visible:ring-gray-300;
+    }
+
+    .btn-ghost {
+        @apply btn bg-transparent text-gray-200 hover:bg-gray-700;
+    }
+
+    .input {
+        @apply block w-full rounded-md border-gray-300 shadow-sm focus:border-gray-900 focus:ring-gray-900 text-sm;
+    }
+
+    .select {
+        @apply block w-full rounded-md border-gray-300 shadow-sm focus:border-gray-900 focus:ring-gray-900 text-sm;
+    }
+
+    .checkbox {
+        @apply h-4 w-4 rounded border-gray-300 text-gray-900 focus:ring-gray-900;
+    }
+
+    .badge {
+        @apply inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium;
+    }
+
+    .badge-success {
+        @apply badge bg-green-100 text-green-700;
+    }
+
+    .badge-muted {
+        @apply badge bg-gray-100 text-gray-600;
+    }
+
+    .skeleton {
+        @apply animate-pulse rounded-md bg-gray-200;
+    }
+}
+
+@layer utilities {
+    @keyframes overlay-in {
+        from {
+            opacity: 0
+        }
+
+        to {
+            opacity: 1
+        }
+    }
+
+    @keyframes modal-in {
+        from {
+            opacity: 0;
+            transform: translateY(4px) scale(0.98)
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0) scale(1)
+        }
+    }
+
+    .animate-overlay {
+        animation: overlay-in 160ms ease-out;
+    }
+
+    .animate-modal {
+        animation: modal-in 180ms ease-out;
+    }
+}

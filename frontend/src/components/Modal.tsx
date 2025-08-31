@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 
 type ModalProps = {
     open: boolean;
@@ -10,7 +11,6 @@ type ModalProps = {
 export default function Modal({ open, title, onClose, children }: ModalProps) {
     const overlayRef = useRef<HTMLDivElement>(null);
 
-    // hooki ZAWSZE się wywołują; logika w środku zależna od `open`
     useEffect(() => {
         if (!open) return;
         const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose(); };
@@ -25,46 +25,27 @@ export default function Modal({ open, title, onClose, children }: ModalProps) {
 
     if (!open) return null;
 
-    return (
+    const target = document.getElementById('modal-root') ?? document.body;
+
+    return createPortal(
         <div
             ref={overlayRef}
             role="dialog"
             aria-modal="true"
+            className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 p-4 animate-overlay"
             onMouseDown={(e) => { if (e.target === overlayRef.current) onClose(); }}
-            style={{
-                position: 'fixed',
-                inset: 0,
-                background: 'rgba(0,0,0,0.5)',
-                zIndex: 999999,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                padding: '16px',
-            }}
         >
             <div
+                className="w-full max-w-lg overflow-hidden rounded-xl bg-white shadow-2xl outline-none animate-modal"
                 onMouseDown={(e) => e.stopPropagation()}
-                style={{
-                    width: '100%',
-                    maxWidth: 720,
-                    background: 'white',
-                    borderRadius: 12,
-                    boxShadow: '0 24px 48px rgba(0,0,0,0.2)',
-                    outline: 'none',
-                }}
             >
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid #e5e7eb', padding: '12px 16px' }}>
-                    <h3 style={{ fontSize: '1rem', fontWeight: 600 }}>{title ?? 'Dialog'}</h3>
-                    <button
-                        onClick={onClose}
-                        aria-label="Zamknij"
-                        style={{ border: '1px solid #e5e7eb', borderRadius: 8, padding: '4px 8px', background: 'white', cursor: 'pointer' }}
-                    >
-                        ✕
-                    </button>
+                <div className="card-section flex items-center justify-between">
+                    <h3 className="text-base font-semibold">{title ?? 'Dialog'}</h3>
+                    <button onClick={onClose} className="btn-outline px-2 py-1" aria-label="Zamknij">✕</button>
                 </div>
-                <div style={{ padding: 16 }}>{children}</div>
+                <div className="p-4">{children}</div>
             </div>
-        </div>
+        </div>,
+        target
     );
 }

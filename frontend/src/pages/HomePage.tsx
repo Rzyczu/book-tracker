@@ -8,17 +8,13 @@ export default function HomePage() {
     const addBtnRef = useRef<HTMLButtonElement>(null);
 
     return (
-        <div className="p-4">
+        <div className="p-4 container-app">
             <header className="mb-4 flex items-center justify-between">
                 <div>
                     <h1 className="text-xl font-semibold">Book Tracker</h1>
                     <p className="text-sm text-gray-600">Dodawaj i oznaczaj książki.</p>
                 </div>
-                <button
-                    ref={addBtnRef}
-                    onClick={() => { console.log('open modal'); setOpen(true); }}
-                    className="rounded-md bg-gray-900 px-4 py-2 text-sm text-white hover:opacity-90"
-                >
+                <button ref={addBtnRef} onClick={() => setOpen(true)} className="btn-primary px-4 py-2">
                     Dodaj książkę
                 </button>
             </header>
@@ -28,16 +24,10 @@ export default function HomePage() {
             <Modal
                 open={open}
                 title="Dodaj nową książkę"
-                onClose={() => {
-                    setOpen(false);
-                    setTimeout(() => addBtnRef.current?.focus(), 0);
-                }}
+                onClose={() => { setOpen(false); setTimeout(() => addBtnRef.current?.focus(), 0); }}
             >
                 <AddBookForm
-                    onSuccess={() => {
-                        setOpen(false);
-                        setTimeout(() => addBtnRef.current?.focus(), 0);
-                    }}
+                    onSuccess={() => { setOpen(false); setTimeout(() => addBtnRef.current?.focus(), 0); }}
                 />
             </Modal>
         </div>

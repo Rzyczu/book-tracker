@@ -3,6 +3,7 @@ import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { booksApi } from '../api/books';
+
 import type { Book } from '../types';
 
 const Schema = z.object({
@@ -36,38 +37,23 @@ export default function AddBookForm({ onSuccess }: { onSuccess?: (b: Book) => vo
             <div className="mb-3 grid gap-3 sm:grid-cols-2">
                 <div>
                     <label className="mb-1 block text-sm font-medium">Tytuł</label>
-                    <input
-                        className="w-full rounded-md border px-3 py-2 text-sm outline-none focus:ring"
-                        placeholder="np. Clean Code"
-                        {...register('title')}
-                        autoFocus
-                    />
+                    <input className="input" placeholder="np. Clean Code" {...register('title')} autoFocus />
                     {errors.title && <p className="mt-1 text-xs text-red-600">{errors.title.message}</p>}
                 </div>
-
                 <div>
                     <label className="mb-1 block text-sm font-medium">Autor</label>
-                    <input
-                        className="w-full rounded-md border px-3 py-2 text-sm outline-none focus:ring"
-                        placeholder="np. Robert C. Martin"
-                        {...register('author')}
-                    />
+                    <input className="input" placeholder="np. Robert C. Martin" {...register('author')} />
                     {errors.author && <p className="mt-1 text-xs text-red-600">{errors.author.message}</p>}
                 </div>
             </div>
 
             <div className="flex items-center gap-2">
-                <button
-                    type="submit"
-                    disabled={isSubmitting || mutation.isPending}
-                    className="rounded-md bg-gray-900 px-4 py-2 text-sm text-white disabled:opacity-50"
-                >
+                <button type="submit" disabled={isSubmitting || mutation.isPending} className="btn-primary px-4 py-2">
                     {mutation.isPending ? 'Dodawanie…' : 'Dodaj'}
                 </button>
-                {mutation.isError && (
-                    <span className="text-sm text-red-700">{(mutation.error as Error).message}</span>
-                )}
+                {mutation.isError && <span className="text-sm text-red-700">{(mutation.error as Error).message}</span>}
             </div>
         </form>
     );
+
 }

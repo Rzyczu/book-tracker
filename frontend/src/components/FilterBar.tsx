@@ -20,53 +20,32 @@ export default function FilterBar({
     const sId = useId();
 
     return (
-        <div className="mb-4 flex flex-col gap-3 rounded-md border bg-white p-3 sm:flex-row sm:items-end">
-            <div className="flex-1">
-                <label htmlFor={qId} className="mb-1 block text-sm font-medium">Szukaj (tytuł/autor)</label>
-                <input
-                    id={qId}
-                    className="w-full rounded-md border px-3 py-2 text-sm outline-none focus:ring"
-                    placeholder="np. Martin…"
-                    value={query}
-                    onChange={(e) => onQueryChange(e.target.value)}
-                />
-            </div>
+        <div className="mb-4 card p-3 sm:p-4">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-end">
+                <div className="flex-1">
+                    <label htmlFor={qId} className="mb-1 block text-sm font-medium">Szukaj (tytuł/autor)</label>
+                    <input id={qId} className="input" placeholder="np. Martin…" value={query} onChange={(e) => onQueryChange(e.target.value)} />
+                </div>
 
-            <div className="sm:w-48">
-                <label htmlFor={sId} className="mb-1 block text-sm font-medium">Sortowanie</label>
-                <select
-                    id={sId}
-                    className="w-full rounded-md border px-3 py-2 text-sm outline-none focus:ring"
-                    value={sort}
-                    onChange={(e) => onSortChange(e.target.value as Props['sort'])}
-                >
-                    <option value="newest">Najnowsze (ID ↓)</option>
-                    <option value="title-asc">Tytuł A→Z</option>
-                    <option value="title-desc">Tytuł Z→A</option>
-                    <option value="author-asc">Autor A→Z</option>
-                    <option value="author-desc">Autor Z→A</option>
-                </select>
-            </div>
+                <div className="sm:w-52">
+                    <label htmlFor={sId} className="mb-1 block text-sm font-medium">Sortowanie</label>
+                    <select id={sId} className="select" value={sort} onChange={(e) => onSortChange(e.target.value as Props['sort'])}>
+                        <option value="newest">Najnowsze (ID ↓)</option>
+                        <option value="title-asc">Tytuł A→Z</option>
+                        <option value="title-desc">Tytuł Z→A</option>
+                        <option value="author-asc">Autor A→Z</option>
+                        <option value="author-desc">Autor Z→A</option>
+                    </select>
+                </div>
 
-            <div className="flex items-center gap-3">
-                <label htmlFor={cId} className="inline-flex items-center gap-2 text-sm">
-                    <input
-                        id={cId}
-                        type="checkbox"
-                        className="h-4 w-4"
-                        checked={onlyUnread}
-                        onChange={(e) => onOnlyUnreadChange(e.target.checked)}
-                    />
-                    Tylko nieprzeczytane
-                </label>
+                <div className="flex items-center gap-3">
+                    <label htmlFor={cId} className="inline-flex items-center gap-2 text-sm">
+                        <input id={cId} type="checkbox" className="checkbox" checked={onlyUnread} onChange={(e) => onOnlyUnreadChange(e.target.checked)} />
+                        Tylko nieprzeczytane
+                    </label>
 
-                <button
-                    type="button"
-                    onClick={onClear}
-                    className="rounded-md border px-3 py-2 text-sm hover:bg-gray-50"
-                >
-                    Wyczyść
-                </button>
+                    <button type="button" onClick={onClear} className="btn-outline px-3 py-2">Wyczyść</button>
+                </div>
             </div>
         </div>
     );
