@@ -16,8 +16,7 @@ You can browse the list, add new books, and mark/unmark them as read. The fronte
 ## Quick Start
 
 > **Requirements:**  
-> Node **18 / 20 (LTS)** and npm.  
-> (Node 23+ can show warnings with some tools; LTS is recommended.)
+> Node **18+ (LTS)** and npm.  
 
 ### 1) Clone the repository
 ```bash
@@ -29,7 +28,6 @@ cd book-tracker
 ```bash
 cd backend
 npm i
-# (the first run will create the DB file and the `books` table)
 npm run dev
 # API: http://localhost:4000
 ```
