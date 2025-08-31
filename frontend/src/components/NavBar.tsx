@@ -14,7 +14,7 @@ export default function NavBar() {
                         Home
                     </NavLink>
                     <NavLink to="/stats" className={({ isActive }) => `${base} ${isActive ? active : inactive}`}>
-                        Statystyki
+                        Statistics
                     </NavLink>
                 </div>
             </div>

@@ -90,8 +90,8 @@ export default function BookList() {
     return (
         <>
             <div className="mb-3 flex items-center justify-between">
-                <h2 className="text-base font-semibold">Twoje książki</h2>
-                <button className="btn-outline px-3 py-1" onClick={() => refetch()} disabled={isFetching}>Odśwież</button>
+                <h2 className="text-base font-semibold">Your books</h2>
+                <button className="btn-outline px-3 py-1" onClick={() => refetch()} disabled={isFetching}>Refresh</button>
             </div>
 
             <FilterBar
@@ -112,12 +112,12 @@ export default function BookList() {
 
             {isError && (
                 <div className="card p-3 text-sm text-red-700 border-red-200 bg-red-50">
-                    Błąd pobierania listy: {(error as Error).message}
+                    Error fetching the list: {(error as Error).message}
                 </div>
             )}
 
             {!isLoading && !isError && filtered && filtered.length === 0 && (
-                <div className="card p-4 text-sm text-gray-600">Brak wyników dla zastosowanych filtrów.</div>
+                <div className="card p-4 text-sm text-gray-600">No results for the applied filters.</div>
             )}
 
             {!isLoading && !isError && filtered && filtered.length > 0 && (

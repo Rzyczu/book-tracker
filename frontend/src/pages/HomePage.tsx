@@ -12,10 +12,10 @@ export default function HomePage() {
             <header className="mb-4 flex items-center justify-between">
                 <div>
                     <h1 className="text-xl font-semibold">Book Tracker</h1>
-                    <p className="text-sm text-gray-600">Dodawaj i oznaczaj książki.</p>
+                    <p className="text-sm text-gray-600">Add and mark books.</p>
                 </div>
                 <button ref={addBtnRef} onClick={() => setOpen(true)} className="btn-primary px-4 py-2">
-                    Dodaj książkę
+                    Add book
                 </button>
             </header>
 
@@ -23,7 +23,7 @@ export default function HomePage() {
 
             <Modal
                 open={open}
-                title="Dodaj nową książkę"
+                title="Add a new book"
                 onClose={() => { setOpen(false); setTimeout(() => addBtnRef.current?.focus(), 0); }}
             >
                 <AddBookForm

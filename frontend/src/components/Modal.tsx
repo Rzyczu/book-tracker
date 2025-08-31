@@ -41,7 +41,7 @@ export default function Modal({ open, title, onClose, children }: ModalProps) {
             >
                 <div className="card-section flex items-center justify-between">
                     <h3 className="text-base font-semibold">{title ?? 'Dialog'}</h3>
-                    <button onClick={onClose} className="btn-outline px-2 py-1" aria-label="Zamknij">✕</button>
+                    <button onClick={onClose} className="btn-outline px-2 py-1" aria-label="Close">✕</button>
                 </div>
                 <div className="p-4">{children}</div>
             </div>

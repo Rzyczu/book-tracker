@@ -4,7 +4,7 @@ export type Stats = {
     total: number;
     read: number;
     unread: number;
-    completion: number; // 0..100
+    completion: number;
     topAuthors: { author: string; count: number }[];
 };
 

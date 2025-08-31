@@ -14,7 +14,7 @@ export default function StatsPage() {
         <div className="p-4 container-app">
             <header className="mb-4 flex items-center justify-between">
                 <h1 className="text-xl font-semibold">Statistics</h1>
-                <button className="btn-outline px-3 py-1" onClick={() => refetch()} disabled={isFetching}>Odśwież</button>
+                <button className="btn-outline px-3 py-1" onClick={() => refetch()} disabled={isFetching}>Refresh</button>
             </header>
 
             {isLoading && (
@@ -25,31 +25,31 @@ export default function StatsPage() {
 
             {isError && (
                 <div className="card p-3 text-sm text-red-700 border-red-200 bg-red-50">
-                    Nie udało się pobrać danych: {(error as Error).message}
+                    Failed to fetch date: {(error as Error).message}
                 </div>
             )}
 
             {!isLoading && !isError && stats && (
                 <>
                     <section className="mb-4 grid gap-3 sm:grid-cols-4">
-                        <StatCard label="Wszystkie" value={stats.total} />
-                        <StatCard label="Przeczytane" value={stats.read} />
-                        <StatCard label="Nieprzeczytane" value={stats.unread} />
-                        <StatCard label="Ukończenie" value={`${stats.completion}%`} />
+                        <StatCard label="All" value={stats.total} />
+                        <StatCard label="Read" value={stats.read} />
+                        <StatCard label="Unread" value={stats.unread} />
+                        <StatCard label="Complete" value={`${stats.completion}%`} />
                     </section>
 
                     <section className="mb-6 card p-4">
-                        <h2 className="mb-2 text-base font-semibold">Postęp czytania</h2>
+                        <h2 className="mb-2 text-base font-semibold">Reading progress</h2>
                         <div className="h-3 w-full overflow-hidden rounded bg-gray-200">
-                            <div className="h-full bg-gray-900 transition-all" style={{ width: `${stats.completion}%` }} aria-label={`Ukończenie ${stats.completion}%`} />
+                            <div className="h-full bg-gray-900 transition-all" style={{ width: `${stats.completion}%` }} aria-label={`Complete ${stats.completion}%`} />
                         </div>
-                        <p className="mt-2 text-xs text-gray-600">{stats.read} / {stats.total} książek przeczytanych</p>
+                        <p className="mt-2 text-xs text-gray-600">{stats.read} / {stats.total} books read</p>
                     </section>
 
                     <section className="card p-4">
-                        <h2 className="mb-2 text-base font-semibold">Top autorzy</h2>
+                        <h2 className="mb-2 text-base font-semibold">Top authors</h2>
                         {stats.topAuthors.length === 0 ? (
-                            <p className="text-sm text-gray-600">Brak danych.</p>
+                            <p className="text-sm text-gray-600">No data.</p>
                         ) : (
                             <ul className="space-y-2">
                                 {stats.topAuthors.map(({ author, count }) => (
@@ -70,7 +70,7 @@ export default function StatsPage() {
             )}
 
             {!isLoading && !isError && data && data.length === 0 && (
-                <div className="card p-4 text-sm text-gray-600">Brak książek do policzenia statystyk. Dodaj pozycje na stronie głównej.</div>
+                <div className="card p-4 text-sm text-gray-600"> No books to compute statistics. Add items on the home page</div>
             )}
         </div>
     );
