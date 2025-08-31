@@ -5,7 +5,7 @@ export const BookCreateSchema = z.object({
     author: z.string().min(1),
 });
 
-// PATCH /books/:id/read – bez body lub opcjonalne { read: true }
+// /books/:id/read 
 export const BookMarkReadSchema = z.object({
     read: z.literal(true).optional(),
 });

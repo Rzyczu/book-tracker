@@ -10,7 +10,6 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Migruj schemat przy starcie (prosty use-case)
 migrate();
 
 app.get('/health', (_req, res) => res.json({ ok: true }));

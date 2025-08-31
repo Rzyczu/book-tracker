@@ -10,7 +10,6 @@ export const booksService = {
     create(title: string, author: string): Book {
         const id = booksRepository.insert(title, author);
         const row = booksRepository.findById(id);
-        // row nie powinno być undefined, ale dla bezpieczeństwa:
         if (!row) throw new Error('Failed to fetch inserted book');
         return rowToBook(row);
     },
