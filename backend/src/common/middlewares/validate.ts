@@ -7,7 +7,6 @@ export function validateBody(schema: ZodSchema) {
         if (!parsed.success) {
             return res.status(400).json({ error: parsed.error.flatten() });
         }
-        // nadpisujemy zwalidowanym ciałem (typy!)
         req.body = parsed.data;
         next();
     };
