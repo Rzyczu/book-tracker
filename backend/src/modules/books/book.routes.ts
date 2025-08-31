@@ -8,3 +8,4 @@ export const booksRouter = Router();
 booksRouter.get('/', booksController.list);
 booksRouter.post('/', validateBody(BookCreateSchema), booksController.create);
 booksRouter.patch('/:id/read', validateBody(BookMarkReadSchema), booksController.markRead);
+booksRouter.patch('/:id/unread', booksController.unmarkRead);

@@ -1,11 +1,51 @@
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { booksApi } from '../api/books';
 import AddBookForm from '../components/AddBookForm';
+import type { Book } from '../types';
 
 export default function HomePage() {
+    const queryClient = useQueryClient();
+
     const { data, isLoading, isError, error, refetch, isFetching } = useQuery({
         queryKey: ['books'],
         queryFn: () => booksApi.list(),
+    });
+
+    const markReadMutation = useMutation({
+        mutationFn: (id: number) => booksApi.markRead(id),
+
+        onMutate: async (id: number) => {
+            await queryClient.cancelQueries({ queryKey: ['books'] });
+            const previous = queryClient.getQueryData<Book[]>(['books']);
+
+            queryClient.setQueryData<Book[]>(['books'], (curr) =>
+                curr ? curr.map((b) => (b.id === id ? { ...b, read: true } : b)) : curr
+            );
+
+            return { previous };
+        },
+
+        onError: (_err, _id, ctx) => {
+            if (ctx?.previous) queryClient.setQueryData(['books'], ctx.previous);
+        },
+
+        onSettled: () => {
+            queryClient.invalidateQueries({ queryKey: ['books'] });
+        },
+    });
+
+    const unmarkReadMutation = useMutation({
+        mutationFn: (id: number) => booksApi.unmarkRead(id),
+        onMutate: async (id) => {
+            await queryClient.cancelQueries({ queryKey: ['books'] });
+            const previous = queryClient.getQueryData<Book[]>(['books']);
+            queryClient.setQueryData<Book[]>(['books'], (curr) =>
+                curr ? curr.map((b) => (b.id === id ? { ...b, read: false } : b)) : curr
+            );
+            return { previous };
+        },
+        onError: (_e, _id, ctx) => { if (ctx?.previous) queryClient.setQueryData(['books'], ctx.previous); },
+        onSettled: () => { queryClient.invalidateQueries({ queryKey: ['books'] }); },
     });
 
     return (
@@ -50,22 +90,45 @@ export default function HomePage() {
             {/* List */}
             {!isLoading && !isError && data && data.length > 0 && (
                 <ul className="divide-y divide-gray-200 rounded-md border bg-white">
-                    {data.map((b) => (
-                        <li key={b.id} className="flex items-center justify-between p-3">
-                            <div>
-                                <div className="font-medium">{b.title}</div>
-                                <div className="text-xs text-gray-500">autor: {b.author}</div>
-                            </div>
-                            <span
-                                className={
-                                    'rounded-full px-2 py-0.5 text-xs ' +
-                                    (b.read ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-600')
-                                }
-                            >
-                                {b.read ? 'Przeczytana' : 'Nieprzeczytana'}
-                            </span>
-                        </li>
-                    ))}
+                    {data.map((b) => {
+                        const isMarking = markReadMutation.isPending && markReadMutation.variables === b.id;
+                        const isUnmarking = unmarkReadMutation.isPending && unmarkReadMutation.variables === b.id;
+
+                        return (
+                            <li key={b.id} className="flex items-center justify-between p-3">
+                                <div>
+                                    <div className="font-medium">{b.title}</div>
+                                    <div className="text-xs text-gray-500">autor: {b.author}</div>
+                                </div>
+
+                                <div className="flex items-center gap-2">
+                                    <span
+                                        className={'rounded-full px-2 py-0.5 text-xs ' + (b.read ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-600')}
+                                    >
+                                        {b.read ? 'Przeczytana' : 'Nieprzeczytana'}
+                                    </span>
+
+                                    {!b.read ? (
+                                        <button
+                                            className="rounded-md border px-2 py-1 text-xs hover:bg-gray-50 disabled:opacity-50"
+                                            onClick={() => markReadMutation.mutate(b.id)}
+                                            disabled={isMarking}
+                                        >
+                                            {isMarking ? 'Oznaczanie…' : 'Oznacz jako przeczytaną'}
+                                        </button>
+                                    ) : (
+                                        <button
+                                            className="rounded-md border px-2 py-1 text-xs hover:bg-gray-50 disabled:opacity-50"
+                                            onClick={() => unmarkReadMutation.mutate(b.id)}
+                                            disabled={isUnmarking}
+                                        >
+                                            {isUnmarking ? 'Cofanie…' : 'Oznacz jako nieprzeczytaną'}
+                                        </button>
+                                    )}
+                                </div>
+                            </li>
+                        );
+                    })}
                 </ul>
             )}
         </div>

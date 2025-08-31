@@ -19,4 +19,10 @@ export const booksController = {
         const book = booksService.markRead(id);
         res.json(book);
     },
+
+    unmarkRead: (req: Request<{ id: string }>, res: Response) => {
+        const id = Number(req.params.id);
+        const book = booksService.unmarkRead(id);
+        res.json(book);
+    },
 };

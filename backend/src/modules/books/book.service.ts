@@ -24,4 +24,15 @@ export const booksService = {
         const row = booksRepository.findById(id)!;
         return rowToBook(row);
     },
+
+    unmarkRead(id: number): Book {
+        const changes = booksRepository.markUnread(id);
+        if (changes === 0) {
+            const err = new Error('Book not found') as any;
+            err.status = 404;
+            throw err;
+        }
+        const row = booksRepository.findById(id)!;
+        return rowToBook(row);
+    },
 };

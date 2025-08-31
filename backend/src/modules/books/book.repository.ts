@@ -22,6 +22,10 @@ function markReadStmt() {
   `);
 }
 
+function markUnreadStmt() {
+  return db.prepare<[number]>(`UPDATE books SET read = 0 WHERE id = ?`);
+}
+
 export const booksRepository = {
   findAll(): BookRow[] {
     return selectAll().all();
@@ -35,6 +39,10 @@ export const booksRepository = {
   },
   markRead(id: number): number {
     const res = markReadStmt().run(id);
+    return res.changes;
+  },
+  markUnread(id: number): number {
+    const res = markUnreadStmt().run(id);
     return res.changes;
   },
 };
