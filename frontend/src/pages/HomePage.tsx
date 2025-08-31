@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { booksApi } from '../api/books';
+import AddBookForm from '../components/AddBookForm';
 
 export default function HomePage() {
     const { data, isLoading, isError, error, refetch, isFetching } = useQuery({
@@ -20,6 +21,9 @@ export default function HomePage() {
                 </button>
             </header>
 
+            {/* Formularz */}
+            <AddBookForm />
+
             {/* Loading */}
             {isLoading && (
                 <ul className="space-y-2">
@@ -39,7 +43,7 @@ export default function HomePage() {
             {/* Empty */}
             {!isLoading && !isError && data && data.length === 0 && (
                 <div className="rounded-md border border-gray-200 bg-white p-4 text-sm text-gray-600">
-                    Brak książek. Dodaj pierwszą pozycję.
+                    Brak książek. Dodaj pierwszą pozycję powyżej.
                 </div>
             )}
 

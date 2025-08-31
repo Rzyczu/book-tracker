@@ -9,7 +9,7 @@ export default function NavBar() {
         <nav className="bg-gray-800">
             <div className="mx-auto max-w-5xl px-4">
                 <div className="flex h-12 items-center gap-2">
-                    <div className="text-white font-semibold mr-4">📚 Book Tracker</div>
+                    <div className="text-white font-semibold mr-4">Book Tracker</div>
                     <NavLink to="/" end className={({ isActive }) => `${linkBase} ${isActive ? active : inactive}`}>
                         Home
                     </NavLink>
