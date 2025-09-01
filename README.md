@@ -157,4 +157,4 @@ curl -X PATCH http://localhost:4000/books/1/unread
 
 ## License
 
-MIT (or your preferred license).
+MIT.
